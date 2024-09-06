@@ -30,4 +30,12 @@ public class ProductService {
 
         return products.stream().map(GetProductsRes::new).toList();
     }
+
+    public ProductDto getProduct(UUID uuid){
+        Product product = productRepository.findById(uuid)
+                .orElseThrow( () -> new RuntimeException("존재하지 않는 상품입니다."));
+
+        return product.toDto();
+    }
+    
 }

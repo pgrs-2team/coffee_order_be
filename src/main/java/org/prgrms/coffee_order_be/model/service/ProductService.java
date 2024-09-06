@@ -9,6 +9,7 @@ import org.prgrms.coffee_order_be.model.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,4 +25,9 @@ public class ProductService {
         return product.toDto();
     }
 
+    public List<GetProductsRes> getProducts(){
+        List<Product> products = productRepository.findAll();
+
+        return products.stream().map(GetProductsRes::new).toList();
+    }
 }

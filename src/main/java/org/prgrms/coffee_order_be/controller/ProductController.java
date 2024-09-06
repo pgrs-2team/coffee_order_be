@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +22,12 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@RequestBody @Valid CreateProductReq req){
         ProductDto resp = productService.createProduct(req);
+        return ResponseEntity.ok(resp);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<GetProductsRes>> getProducts(){
+        List<GetProductsRes> resp = productService.getProducts();
         return ResponseEntity.ok(resp);
     }
 

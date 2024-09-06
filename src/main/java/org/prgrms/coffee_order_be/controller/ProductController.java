@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.coffee_order_be.model.dto.ProductDto;
 import org.prgrms.coffee_order_be.model.dto.request.CreateProductReq;
+import org.prgrms.coffee_order_be.model.dto.request.UpdateProductReq;
 import org.prgrms.coffee_order_be.model.dto.response.GetProductsRes;
 import org.prgrms.coffee_order_be.model.service.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,13 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable(name = "id") UUID uuid){
         ProductDto resp = productService.getProduct(uuid);
+        return ResponseEntity.ok(resp);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable(name = "id") UUID uuid,
+                                                    @RequestBody @Valid UpdateProductReq req) {
+        ProductDto resp = productService.updateProduct(uuid, req);
         return ResponseEntity.ok(resp);
     }
 

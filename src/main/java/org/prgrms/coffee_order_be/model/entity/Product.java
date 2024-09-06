@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.prgrms.coffee_order_be.model.dto.ProductDto;
+import org.prgrms.coffee_order_be.model.dto.request.UpdateProductReq;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -55,5 +56,12 @@ public class Product {
                 .description(description)
                 .price(price)
                 .build();
+    }
+
+    public Product update(UpdateProductReq req){
+        this.price = req.getPrice();
+        this.description = req.getDescription();
+
+        return this;
     }
 }

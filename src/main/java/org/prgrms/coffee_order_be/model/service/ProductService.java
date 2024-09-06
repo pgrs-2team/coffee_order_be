@@ -3,6 +3,7 @@ package org.prgrms.coffee_order_be.model.service;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.coffee_order_be.model.dto.ProductDto;
 import org.prgrms.coffee_order_be.model.dto.request.CreateProductReq;
+import org.prgrms.coffee_order_be.model.dto.request.UpdateProductReq;
 import org.prgrms.coffee_order_be.model.dto.response.GetProductsRes;
 import org.prgrms.coffee_order_be.model.entity.Product;
 import org.prgrms.coffee_order_be.model.repository.ProductRepository;
@@ -41,5 +42,15 @@ public class ProductService {
     public String deleteProduct(UUID uuid){
         productRepository.deleteById(uuid);
         return "Delete Success";
+    }
+
+    public ProductDto updateProduct(UUID uuid, UpdateProductReq req){
+        Product product = productRepository.findById(uuid)
+                .orElseThrow( () -> new RuntimeException("존재하지 않는 상품입니다."));
+
+        product = product.update(req);
+        productRepository.save(product);
+
+        return product.toDto();
     }
 }

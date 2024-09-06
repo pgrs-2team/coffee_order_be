@@ -37,5 +37,9 @@ public class ProductService {
 
         return product.toDto();
     }
-    
+
+    public String deleteProduct(UUID uuid){
+        productRepository.deleteById(uuid);
+        return "Delete Success";
+    }
 }

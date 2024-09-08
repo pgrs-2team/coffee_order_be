@@ -1,6 +1,11 @@
 package org.prgrms.coffee_order_be.product.service;
 
+import static org.prgrms.coffee_order_be.common.exception.ExceptionCode.DUPLICATED_PRODUCT;
+import static org.prgrms.coffee_order_be.common.exception.ExceptionCode.NOT_FOUND_PRODUCT;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.coffee_order_be.common.exception.BusinessLogicException;
 import org.prgrms.coffee_order_be.common.exception.ExceptionCode;
@@ -21,10 +26,23 @@ public class ProductService {
         createDto.getProductName());
 
     if (existProduct.isPresent())
-      throw new BusinessLogicException(ExceptionCode.DUPLICATED_PRODUCT);
+      throw new BusinessLogicException(DUPLICATED_PRODUCT);
 
     Product product = createDto.toEntity();
     productRepository.save(product);
     return ProductResponseDto.from(product);
+  }
+
+  public List<ProductResponseDto> getProducts() {
+    List<Product> products = productRepository.findAll();
+
+    return products.stream().map(ProductResponseDto::from).toList();
+  }
+
+  public ProductResponseDto getProduct(UUID productId) {
+    Product findProduct = productRepository.findById(productId).orElseThrow(
+        () -> new BusinessLogicException(NOT_FOUND_PRODUCT)
+    );
+    return ProductResponseDto.from(findProduct);
   }
 }

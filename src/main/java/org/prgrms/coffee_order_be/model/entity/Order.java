@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "product_id", columnDefinition = "BINARY(16)")
+    @Column(name = "order_id")
     private UUID id;
 
     private String email;

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.prgrms.coffee_order_be.model.dto.OrderItemDto;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +17,7 @@ public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
+    @Column(name = "seq")
     private long id;
 
     private String category;
@@ -26,9 +27,11 @@ public class OrderItem {
     private int quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "created_at")
@@ -46,5 +49,14 @@ public class OrderItem {
         this.quantity = quantity;
         this.order = order;
         this.product = product;
+    }
+
+    public OrderItemDto toDto(){
+        return OrderItemDto.builder()
+                .productName(product.getProductName())
+                .quantity(quantity)
+                .category(category)
+                .price(price)
+                .build();
     }
 }

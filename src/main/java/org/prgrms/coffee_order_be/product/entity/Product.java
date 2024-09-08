@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 import org.prgrms.coffee_order_be.common.audit.Timestamped;
+import org.prgrms.coffee_order_be.product.dto.ProductUpdateDto;
 
 @Entity
 @Table(name = "products")
@@ -50,5 +51,10 @@ public class Product extends Timestamped {
     this.category = category;
     this.price = price;
     this.description = description;
+  }
+
+  public void updateFromDto(ProductUpdateDto updateDto) {
+    this.price = updateDto.getPrice();
+    this.description = updateDto.getDescription();
   }
 }

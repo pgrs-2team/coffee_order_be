@@ -2,6 +2,7 @@ package org.prgrms.coffee_order_be.product.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -153,16 +154,16 @@ class ProductServiceTest {
         .hasMessage(ExceptionCode.NOT_FOUND_PRODUCT.getMessage());
   }
 
-  @DisplayName("잘못된_ProductUpdateDto로_제품을_업데이트할_경우_예외가_발생한다")
+  @DisplayName("제품을_삭제할_수_있다")
   @Test
-  void 잘못된_ProductUpdateDto로_제품을_업데이트할_경우_예외가_발생한다() {
-    // Given
-    UUID unknownId = UUID.randomUUID();
-    when(productRepository.findById(unknownId)).thenReturn(Optional.empty());
+  void 제품을_삭제할_수_있다() {
+    // given
+    when(productRepository.findById(product.getProductId())).thenReturn(Optional.of(product));
 
-    // When
-    assertThatThrownBy(() -> productService.updateProduct(unknownId, updateDto))
-        .isInstanceOf(BusinessLogicException.class)
-        .hasMessage(ExceptionCode.NOT_FOUND_PRODUCT.getMessage());
+    // when
+    productService.deleteProduct(product.getProductId());
+
+    // then
+    verify(productRepository).delete(product);
   }
 }

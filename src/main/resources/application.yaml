@@ -14,9 +14,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
 
 logging:
   level:
-    org.hibernate.SQL: info
-    org.hibernate.type: info
+    org.hibernate.SQL: trace
+    org.hibernate.type.descriptor: trace
     root: info

@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.prgrms.coffee_order_be.product.dto.ProductUpdateDto;
 import org.prgrms.coffee_order_be.product.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -91,6 +92,22 @@ class ProductRepositoryTest {
     assertThat(findProduct.get().getProductName()).isEqualTo(product.getProductName());
 
     assertThat(unknownProduct.isEmpty()).isTrue();
+  }
+
+  @DisplayName("제품을_업데이트할_수_있다")
+  @Test
+  void 제품을_업데이트할_수_있다() {
+    // given
+    Product savedProduct = productRepository.findById(product.getProductId()).get();
+    ProductUpdateDto updateDto = new ProductUpdateDto(6000L, "Updated Description");
+
+    // when
+    savedProduct.updateFromDto(updateDto);
+
+    // then
+    Product updatedProduct = productRepository.findById(product.getProductId()).get();
+    assertThat(updatedProduct.getDescription()).isEqualTo(updateDto.getDescription());
+    assertThat(updatedProduct.getPrice()).isEqualTo(updateDto.getPrice());
   }
 
 }

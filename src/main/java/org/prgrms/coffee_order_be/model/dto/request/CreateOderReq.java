@@ -2,7 +2,6 @@ package org.prgrms.coffee_order_be.model.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import org.prgrms.coffee_order_be.model.dto.OrderItemsDto;
 import org.prgrms.coffee_order_be.model.entity.Order;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 @Getter
 public class CreateOderReq {
     @NotNull
-    private List<OrderItemsDto> orderItems;
+    private List<OrderProductDto> orderItems;
 
     @NotNull
     private String email;

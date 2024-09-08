@@ -1,11 +1,11 @@
-package org.prgrms.coffee_order_be.model.dto;
+package org.prgrms.coffee_order_be.model.dto.request;
 
 import lombok.Getter;
 
 import java.util.UUID;
 
 @Getter
-public class OrderItemsDto {
+public class OrderProductDto {
 
     private UUID productsUUID;
 

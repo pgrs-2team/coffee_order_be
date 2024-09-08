@@ -2,6 +2,7 @@ package org.prgrms.coffee_order_be.product.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,19 @@ class ProductRepositoryTest {
     // then
     assertThat(findProduct.isPresent()).isTrue();
     assertThat(findProduct.get().getProductId()).isEqualTo(productOne.getProductId());
+  }
+
+  @DisplayName("제품리스트를_조회할_수_있다")
+  @Test
+  void 제품리스트를_조회할_수_있다() {
+    // given
+
+    // when
+    List<Product> products = productRepository.findAll();
+
+    // then
+    assertThat(products).hasSize(1);
+    assertThat(products.get(0).getProductId()).isEqualTo(product.getProductId());
   }
 
   @DisplayName("식별값으로_제품을_조회할_수_있다")

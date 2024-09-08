@@ -42,4 +42,13 @@ public class Product extends Timestamped {
     this.price = price;
     this.description = description;
   }
+
+  public Product(UUID productId, String productName, String category, Long price,
+      String description) {
+    this.productId = productId;
+    this.productName = productName;
+    this.category = category;
+    this.price = price;
+    this.description = description;
+  }
 }

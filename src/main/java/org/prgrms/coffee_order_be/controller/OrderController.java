@@ -4,14 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.prgrms.coffee_order_be.model.dto.OrderItemDto;
 import org.prgrms.coffee_order_be.model.dto.request.CreateOderReq;
+import org.prgrms.coffee_order_be.model.dto.response.GetOrdersRes;
 import org.prgrms.coffee_order_be.model.entity.OrderItem;
 import org.prgrms.coffee_order_be.model.service.OrderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,9 +24,17 @@ public class OrderController {
 
     @Operation(summary = "주문 생성")
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody @Valid CreateOderReq req){
+    public ResponseEntity<List<OrderItem>> createOrder(@RequestBody @Valid CreateOderReq req){
         List<OrderItem> resp = orderService.createOrder(req);
 
         return ResponseEntity.ok(resp);
     }
+
+    @Operation(summary = "이메일로 주문 조회")
+    @GetMapping
+    public ResponseEntity<List<GetOrdersRes>> getOrders(@RequestParam("email") String email){
+        List<GetOrdersRes> resp = orderService.getOrders(email);
+        return ResponseEntity.ok(resp);
+    }
+
 }

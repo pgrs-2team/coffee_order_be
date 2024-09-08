@@ -64,4 +64,9 @@ public class ProductService {
   }
 
 
+  @Transactional
+  public void deleteProduct(UUID productId) {
+    Product findProduct = findProductOrThrow(productId);
+    productRepository.delete(findProduct);
+  }
 }

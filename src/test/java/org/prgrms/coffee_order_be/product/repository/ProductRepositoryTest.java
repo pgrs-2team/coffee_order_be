@@ -110,4 +110,18 @@ class ProductRepositoryTest {
     assertThat(updatedProduct.getPrice()).isEqualTo(updateDto.getPrice());
   }
 
+  @DisplayName("식별값으로_제품을_삭제할_수_있다")
+  @Test
+  void 식별값으로_제품을_삭제할_수_있다() {
+    // given
+    Product savedProduct = productRepository.findById(product.getProductId()).get();
+
+    // when
+    productRepository.delete(savedProduct);
+    Optional<Product> findProduct = productRepository.findById(product.getProductId());
+
+    // then
+    assertThat(findProduct.isEmpty()).isTrue();
+  }
+
 }

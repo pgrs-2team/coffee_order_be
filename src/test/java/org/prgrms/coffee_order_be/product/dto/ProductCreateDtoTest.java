@@ -69,10 +69,10 @@ public class ProductCreateDtoTest {
   @Test
   void ProductCreateDto을_생성할_때_Valid가_동작한다() {
     // Given
-    ProductCreateDto dto = new ProductCreateDto("", "", -1L, "");
+    ProductCreateDto inValidDto = new ProductCreateDto("", "", -1L, "");
 
     // When
-    Set<ConstraintViolation<ProductCreateDto>> violations = validator.validate(dto);
+    Set<ConstraintViolation<ProductCreateDto>> violations = validator.validate(inValidDto);
 
     // Then
     assertThat(violations).isNotEmpty();

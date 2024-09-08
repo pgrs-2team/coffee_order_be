@@ -18,6 +18,7 @@ import org.prgrms.coffee_order_be.common.exception.BusinessLogicException;
 import org.prgrms.coffee_order_be.common.exception.ExceptionCode;
 import org.prgrms.coffee_order_be.product.dto.ProductCreateDto;
 import org.prgrms.coffee_order_be.product.dto.ProductResponseDto;
+import org.prgrms.coffee_order_be.product.dto.ProductUpdateDto;
 import org.prgrms.coffee_order_be.product.entity.Product;
 import org.prgrms.coffee_order_be.product.repository.ProductRepository;
 
@@ -29,50 +30,54 @@ class ProductServiceTest {
   @InjectMocks
   private ProductService productService;
 
+  private Product product;
+  private ProductCreateDto createDto;
+  private ProductUpdateDto updateDto;
+
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
+
+    product = new Product(UUID.randomUUID(), "test", "test", 1000L,
+        "test");
+    createDto = new ProductCreateDto("create", "create", 1L,
+        "create");
+    updateDto = new ProductUpdateDto(2L, "update");
   }
 
   @DisplayName("제품을_생성할_수_있다")
   @Test
   void 제품을_생성할_수_있다() {
     // Given
-    String productName = "CoffeeBean";
-    String category = "Coffee";
-    Long price = 1000L;
-    String description = "Test Description";
+    Product product = createDto.toEntity();
 
-    ProductCreateDto dto = new ProductCreateDto(productName, category, price, description);
-    Product product = dto.toEntity();
-
-    when(productRepository.findByProductName(productName)).thenReturn(Optional.empty());
+    when(productRepository.findByProductName(createDto.getProductName()))
+        .thenReturn(Optional.empty());
     when(productRepository.save(product)).thenReturn(product);
 
     // When
-    ProductResponseDto responseDto = productService.create(dto);
+    ProductResponseDto responseDto = productService.create(createDto);
 
     // Then
     assertThat(responseDto).isNotNull();
-    assertThat(responseDto.getProductName()).isEqualTo(productName);
-    assertThat(responseDto.getCategory()).isEqualTo(category);
-    assertThat(responseDto.getPrice()).isEqualTo(price);
-    assertThat(responseDto.getDescription()).isEqualTo(description);
+    assertThat(responseDto.getProductName()).isEqualTo(createDto.getProductName());
+    assertThat(responseDto.getCategory()).isEqualTo(createDto.getProductName());
+    assertThat(responseDto.getPrice()).isEqualTo(createDto.getPrice());
+    assertThat(responseDto.getDescription()).isEqualTo(createDto.getDescription());
   }
 
   @DisplayName("중복된_제품명으로_생성할_경우_예외가_발생한다")
   @Test
   void 중복된_제품명으로_생성할_경우_예외가_발생한다() {
     // Given
-    String productName = "CoffeeBean";
-    ProductCreateDto dto = new ProductCreateDto(
-        productName, "Coffee", 1000L, "Test Description");
     Product existingProduct = Product.builder().build();
 
-    when(productRepository.findByProductName(productName)).thenReturn(Optional.of(existingProduct));
+    when(productRepository.findByProductName(createDto.getProductName()))
+        .thenReturn(Optional.of(existingProduct));
 
     // When // Then
-    assertThatThrownBy(() -> productService.create(dto)).isInstanceOf(BusinessLogicException.class)
+    assertThatThrownBy(() -> productService.create(createDto))
+        .isInstanceOf(BusinessLogicException.class)
         .hasMessage(ExceptionCode.DUPLICATED_PRODUCT.getMessage());
   }
 
@@ -97,28 +102,66 @@ class ProductServiceTest {
   @Test
   void 식별값으로_제품을_조회할_수_있다() {
     // Given
-    UUID productId = UUID.randomUUID();
-    Product product = new Product(
-        productId, "1", "1", 1L, "1");
-    when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+    when(productRepository.findById(product.getProductId())).thenReturn(Optional.of(product));
 
     // When
-    ProductResponseDto responseDto = productService.getProduct(productId);
+    ProductResponseDto responseDto = productService.getProduct(product.getProductId());
 
     // Then
     assertThat(responseDto).isNotNull();
-    assertThat(responseDto.getProductId()).isEqualTo(productId);
+    assertThat(responseDto.getProductId()).isEqualTo(product.getProductId());
   }
 
   @DisplayName("존재하지_않는_제품을_조회할때_예외가_발생한다")
   @Test
   void 존재하지_않는_제품을_조회할때_예외가_발생한다() {
     // Given
-    UUID productId = UUID.randomUUID();
-    when(productRepository.findById(productId)).thenReturn(Optional.empty());
+    UUID unknownId = UUID.randomUUID();
+    when(productRepository.findById(unknownId)).thenReturn(Optional.empty());
 
     // When // Then
-    assertThatThrownBy(() -> productService.getProduct(productId))
+    assertThatThrownBy(() -> productService.getProduct(product.getProductId()))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(ExceptionCode.NOT_FOUND_PRODUCT.getMessage());
+  }
+
+  @DisplayName("제품을_업데이트할_수_있다")
+  @Test
+  void 제품을_업데이트할_수_있다() {
+    // Given
+    when(productRepository.findById(product.getProductId())).thenReturn(Optional.of(product));
+
+    // When
+    ProductResponseDto responseDto = productService.updateProduct(product.getProductId(), updateDto);
+
+    // Then
+    assertThat(responseDto).isNotNull();
+    assertThat(responseDto.getPrice()).isEqualTo(updateDto.getPrice());
+    assertThat(responseDto.getDescription()).isEqualTo(updateDto.getDescription());
+  }
+
+  @DisplayName("존재하지않는_제품을_업데이트할_경우_예외가_발생한다")
+  @Test
+  void 존재하지않는_제품을_업데이트할_경우_예외가_발생한다() {
+    // Given
+    UUID unknownId = UUID.randomUUID();
+    when(productRepository.findById(unknownId)).thenReturn(Optional.empty());
+
+    // When
+    assertThatThrownBy(() -> productService.updateProduct(unknownId, updateDto))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(ExceptionCode.NOT_FOUND_PRODUCT.getMessage());
+  }
+
+  @DisplayName("잘못된_ProductUpdateDto로_제품을_업데이트할_경우_예외가_발생한다")
+  @Test
+  void 잘못된_ProductUpdateDto로_제품을_업데이트할_경우_예외가_발생한다() {
+    // Given
+    UUID unknownId = UUID.randomUUID();
+    when(productRepository.findById(unknownId)).thenReturn(Optional.empty());
+
+    // When
+    assertThatThrownBy(() -> productService.updateProduct(unknownId, updateDto))
         .isInstanceOf(BusinessLogicException.class)
         .hasMessage(ExceptionCode.NOT_FOUND_PRODUCT.getMessage());
   }

@@ -6,12 +6,14 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.coffee_order_be.order.dto.OrderCreateDto;
 import org.prgrms.coffee_order_be.order.dto.OrderResponseDto;
+import org.prgrms.coffee_order_be.order.dto.OrderUpdateDto;
 import org.prgrms.coffee_order_be.order.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,4 +52,12 @@ public class OrderController {
     OrderResponseDto responseDto = orderService.getOrder(orderId);
     return ResponseEntity.ok().body(responseDto);
   }
+
+  @PutMapping("{orderId}")
+  public ResponseEntity<OrderResponseDto> updateOrder(@PathVariable("orderId") UUID orderId,
+      @RequestBody OrderUpdateDto updateDto) {
+    OrderResponseDto responseDto = orderService.updateOrder(orderId, updateDto);
+    return ResponseEntity.ok().body(responseDto);
+  }
+
 }

@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 import org.prgrms.coffee_order_be.common.audit.Timestamped;
+import org.prgrms.coffee_order_be.order.dto.OrderUpdateDto;
 
 @Entity
 @Table(name = "orders")
@@ -79,5 +80,14 @@ public class Order extends Timestamped {
     return orderItems.stream()
         .mapToLong(orderItem -> orderItem.getPrice() * orderItem.getQuantity())
         .sum();
+  }
+
+  public boolean isUpdatable() {
+    return this.orderStatus.equals(OrderStatus.ORDER_COMPLETED);
+  }
+
+  public void updateFromDto(OrderUpdateDto updateDto) {
+    this.address = updateDto.getAddress();
+    this.postcode = updateDto.getPostcode();
   }
 }

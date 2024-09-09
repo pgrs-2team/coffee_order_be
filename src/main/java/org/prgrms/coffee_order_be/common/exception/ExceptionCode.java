@@ -13,7 +13,9 @@ public enum ExceptionCode {
   NOT_FOUND_PRODUCT(404, "존재하지 않는 제품입니다."),
 
   // ORDER ERROR
-  NOT_FOUND_ORDER(404, "존재하지 않는 주문입니다.");
+  NOT_FOUND_ORDER(404, "존재하지 않는 주문입니다."),
+  CANNOT_UPDATE_ORDER(400, "업데이트할 수 없는 주문입니다. (배송 시작)");
+
 
   private final int code;
   private final String message;

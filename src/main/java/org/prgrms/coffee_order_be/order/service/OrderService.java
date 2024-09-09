@@ -1,5 +1,6 @@
 package org.prgrms.coffee_order_be.order.service;
 
+import static org.prgrms.coffee_order_be.common.exception.ExceptionCode.CANNOT_DELETE_ORDER;
 import static org.prgrms.coffee_order_be.common.exception.ExceptionCode.CANNOT_UPDATE_ORDER;
 import static org.prgrms.coffee_order_be.common.exception.ExceptionCode.NOT_FOUND_ORDER;
 
@@ -61,13 +62,21 @@ public class OrderService {
   public OrderResponseDto updateOrder(UUID orderId, OrderUpdateDto updateDto) {
     Order findOrder = getOrderById(orderId);
 
-    if (!findOrder.isUpdatable()) {
+    if (!findOrder.isUpdatable())
       throw new BusinessLogicException(CANNOT_UPDATE_ORDER);
-    }
 
     findOrder.updateFromDto(updateDto);
 
     return OrderResponseDto.from(findOrder);
+  }
+
+  public void deleteOrder(UUID orderId) {
+    Order findOrder = getOrderById(orderId);
+
+    if (!findOrder.isDeletable())
+      throw new BusinessLogicException(CANNOT_DELETE_ORDER);
+
+    orderRepository.delete(findOrder);
   }
 
   private Order getOrderById(UUID orderId) {

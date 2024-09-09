@@ -51,7 +51,7 @@ public class OrderService {
     }
 
     public List<GetOrdersRes> getOrder(String email){
-        List<Order> orders = orderRepository.findAllByEmail(email);
+        List<Order> orders = orderRepository.findAllByEmailOrderByCreatedAtDesc(email);
         if(orders.isEmpty())
             throw new RuntimeException("주문 내역이 없습니다.");
 

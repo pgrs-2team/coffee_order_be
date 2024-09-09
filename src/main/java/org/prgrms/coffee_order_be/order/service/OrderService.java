@@ -1,7 +1,10 @@
 package org.prgrms.coffee_order_be.order.service;
 
+import static org.prgrms.coffee_order_be.common.exception.ExceptionCode.NOT_FOUND_ORDER;
+
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.prgrms.coffee_order_be.common.exception.BusinessLogicException;
@@ -34,6 +37,25 @@ public class OrderService {
     return OrderResponseDto.from(order);
   }
 
+  public List<OrderResponseDto> getOrders() {
+    List<Order> orders = orderRepository.findAll();
+
+    return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
+  }
+
+  public List<OrderResponseDto> getOrdersByEmail(String email) {
+    List<Order> orders = orderRepository.findByEmail(email);
+    return orders.stream().map(OrderResponseDto::from).collect(Collectors.toList());
+  }
+
+  public OrderResponseDto getOrder(UUID orderId) {
+    Order findOrder = orderRepository.findById(orderId).orElseThrow(
+        () -> new BusinessLogicException(NOT_FOUND_ORDER)
+    );
+
+    return OrderResponseDto.from(findOrder);
+  }
+
   private List<OrderItem> convertToOrderItems(List<OrderItemCreateDto> orderItemsDto) {
     return orderItemsDto.stream()
         .map(this::createOrderItem)
@@ -41,10 +63,9 @@ public class OrderService {
   }
 
   private OrderItem createOrderItem(OrderItemCreateDto dto) {
-    Product product = productRepository.findById(dto.getProductId())
+    Product findProduct = productRepository.findById(dto.getProductId())
         .orElseThrow(() -> new BusinessLogicException(ExceptionCode.NOT_FOUND_PRODUCT));
 
-    return dto.toEntity(product);
+    return dto.toEntity(findProduct);
   }
-
 }

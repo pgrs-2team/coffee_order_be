@@ -1,5 +1,6 @@
 package org.prgrms.coffee_order_be.model.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import org.prgrms.coffee_order_be.model.entity.Order;
@@ -8,16 +9,16 @@ import java.util.List;
 
 @Getter
 public class CreateOderReq {
-    @NotNull
+    @NotBlank
     private List<OrderProductDto> orderItems;
 
-    @NotNull
+    @NotBlank
     private String email;
 
-    @NotNull
+    @NotBlank
     private String address;
 
-    @NotNull
+    @NotBlank
     private String postcode;
 
     public Order toOrder(){

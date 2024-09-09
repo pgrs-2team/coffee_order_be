@@ -44,4 +44,11 @@ public class Order {
         this.postcode = postcode;
         this.orderStatus = OrderStatus.ORDER_COMPLETED;
     }
+
+    public Order update(String address, String postcode){
+        this.address = address;
+        this.postcode = postcode;
+
+        return this;
+    }
 }

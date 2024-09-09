@@ -69,4 +69,18 @@ public class OrderService {
         return getOrdersResList;
     }
 
+
+    public Order updateOrder(UUID uuid, UpdateOrderReq req){
+        Order order = orderRepository.findById(uuid)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 주문 입니다."));
+
+        if(order.getOrderStatus() != OrderStatus.ORDER_COMPLETED)
+            throw new RuntimeException("배달이 진행 중이므로 상담원에게 전화 연락 부탁드립니다.");
+
+        order.update(req.getAddress(), req.getPostcode());
+        orderRepository.save(order);
+
+        return order;
+    }
+
 }

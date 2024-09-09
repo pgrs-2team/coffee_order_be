@@ -1,12 +1,14 @@
 package org.prgrms.coffee_order_be.model.service;
 
 import lombok.RequiredArgsConstructor;
+import org.prgrms.coffee_order_be.model.dto.request.UpdateOrderReq;
 import org.prgrms.coffee_order_be.model.dto.OrderItemDto;
 import org.prgrms.coffee_order_be.model.dto.request.OrderProductDto;
 import org.prgrms.coffee_order_be.model.dto.request.CreateOderReq;
 import org.prgrms.coffee_order_be.model.dto.response.GetOrdersRes;
 import org.prgrms.coffee_order_be.model.entity.Order;
 import org.prgrms.coffee_order_be.model.entity.OrderItem;
+import org.prgrms.coffee_order_be.model.entity.OrderStatus;
 import org.prgrms.coffee_order_be.model.entity.Product;
 import org.prgrms.coffee_order_be.model.repository.OrderItemRepository;
 import org.prgrms.coffee_order_be.model.repository.OrderRepository;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -47,19 +50,23 @@ public class OrderService {
         return orderItems;
     }
 
-    public List<GetOrdersRes> getOrders(String email){
+    public List<GetOrdersRes> getOrder(String email){
         List<Order> orders = orderRepository.findAllByEmail(email);
+        if(orders.isEmpty())
+            throw new RuntimeException("주문 내역이 없습니다.");
+
         List<GetOrdersRes> getOrdersResList = new ArrayList<>();
 
         for(Order order : orders){
             List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
-            List<OrderItemDto> orderItemDtos = orderItems.stream().map(OrderItem::toDto).toList();
-            GetOrdersRes getOrdersRes = new GetOrdersRes(orderItemDtos);
+            List<OrderItemDto> orderRes = orderItems.stream().map(OrderItem::toDto).toList();
+            GetOrdersRes getOrdersRes = new GetOrdersRes(order.getId(), orderRes, order.getOrderStatus());
 
-            if(!orderItemDtos.isEmpty())
+            if(!orderRes.isEmpty())
                 getOrdersResList.add(getOrdersRes);
         }
 
         return getOrdersResList;
     }
+
 }

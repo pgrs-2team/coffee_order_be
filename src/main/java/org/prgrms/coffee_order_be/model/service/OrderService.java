@@ -83,4 +83,16 @@ public class OrderService {
         return order;
     }
 
+    public String deleteOrder(UUID uuid){
+        Order order = orderRepository.findById(uuid)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 주문 입니다."));
+
+        if(order.getOrderStatus() != OrderStatus.ORDER_COMPLETED)
+            throw new RuntimeException("배달이 진행 중이므로 삭제가 불가능합니다.");
+
+        orderRepository.delete(order);
+
+        return "Success delete";
+    }
+
 }

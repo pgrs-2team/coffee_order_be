@@ -8,16 +8,16 @@ import org.prgrms.coffee_order_be.model.entity.Product;
 @Getter
 public class CreateProductReq {
 
-    @NotNull
+    @NotBlank
     private String productName;
 
-    @NotNull
+    @NotBlank
     private String category;
 
-    @NotNull
+    @NotBlank
     private long price;
 
-    @NotNull
+    @NotBlank
     private String description;
 
     public Product toProduct(){

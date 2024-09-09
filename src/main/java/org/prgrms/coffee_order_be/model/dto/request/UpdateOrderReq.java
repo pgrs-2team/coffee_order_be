@@ -5,10 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class UpdateProductReq {
+public class UpdateOrderReq {
     @NotBlank
-    private long price;
+    private String address;
 
     @NotBlank
-    private String description;
+    private String postcode;
 }

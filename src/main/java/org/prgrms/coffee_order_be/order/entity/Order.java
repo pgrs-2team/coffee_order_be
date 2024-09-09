@@ -94,4 +94,8 @@ public class Order extends Timestamped {
     this.address = updateDto.getAddress();
     this.postcode = updateDto.getPostcode();
   }
+
+  public void startShipping() {
+    this.orderStatus = OrderStatus.SHIPPING_STARTED;
+  }
 }

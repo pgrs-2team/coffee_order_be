@@ -17,9 +17,15 @@ public class GetOrdersRes {
 
     private OrderStatus orderStatus;
 
-    public GetOrdersRes(UUID uuid, List<OrderItemDto> orderRes, OrderStatus orderStatus) {
+    private String address;
+
+    private String postcode;
+
+    public GetOrdersRes(UUID uuid, List<OrderItemDto> orderRes, OrderStatus orderStatus, String address, String postcode) {
         this.uuid = uuid;
         this.orderRes = orderRes;
         this.orderStatus = orderStatus;
+        this.address = address;
+        this.postcode = postcode;
     }
 }

@@ -60,7 +60,7 @@ public class OrderService {
         for(Order order : orders){
             List<OrderItem> orderItems = orderItemRepository.findAllByOrder(order);
             List<OrderItemDto> orderRes = orderItems.stream().map(OrderItem::toDto).toList();
-            GetOrdersRes getOrdersRes = new GetOrdersRes(order.getId(), orderRes, order.getOrderStatus());
+            GetOrdersRes getOrdersRes = new GetOrdersRes(order.getId(), orderRes, order.getOrderStatus(), order.getAddress(), order.getPostcode());
 
             if(!orderRes.isEmpty())
                 getOrdersResList.add(getOrdersRes);

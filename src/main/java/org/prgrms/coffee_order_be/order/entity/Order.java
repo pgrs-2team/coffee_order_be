@@ -83,7 +83,11 @@ public class Order extends Timestamped {
   }
 
   public boolean isUpdatable() {
-    return this.orderStatus.equals(OrderStatus.ORDER_COMPLETED);
+    return OrderStatus.ORDER_COMPLETED.equals(this.orderStatus);
+  }
+
+  public boolean isDeletable() {
+    return OrderStatus.ORDER_COMPLETED.equals(this.orderStatus);
   }
 
   public void updateFromDto(OrderUpdateDto updateDto) {
